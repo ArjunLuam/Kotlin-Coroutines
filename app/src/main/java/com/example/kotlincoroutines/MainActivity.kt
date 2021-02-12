@@ -4,10 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.example.kotlincoroutines.databinding.ActivityMainBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
    private lateinit var binding: ActivityMainBinding
@@ -20,25 +17,26 @@ class MainActivity : AppCompatActivity() {
             binding.tvCount.text = count++.toString()
         }
         binding.btnDownloadUserData.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
+            CoroutineScope(Dispatchers.Main).launch {
                 //coroutine scope is an interface defines it's scope,global scope is used to handle top level coroutine
                 //dispatchers describe the kind of thread
                 //IO dispatcher used to work in background thread....
                 //launch enables a new coroutine without suspending the current but without returning any value
                 // to return value we use async
-                downloadUserData()
+                binding.tvUserMessage.text = UserDataMnager2().getTotalCount().toString()
             }
         }
     }
 
-    private suspend fun downloadUserData() {
-
-        for (i in 1..200000) {
-            withContext(Dispatchers.Main){
-                binding.tvUserMessage.text="Downloading user $i in ${Thread.currentThread().name}"
-            }
-
-            //Log.i("MyTag", "Downloading user $i in ${Thread.currentThread().name}")
-        }
-    }
+//    private suspend fun downloadUserData() {
+//
+//        for (i in 1..200000) {
+//            withContext(Dispatchers.Main){
+//                binding.tvUserMessage.text="Downloading user $i in ${Thread.currentThread().name}"
+//                delay(1000)
+//            }
+//
+//            //Log.i("MyTag", "Downloading user $i in ${Thread.currentThread().name}")
+//        }
+//    }
     }
