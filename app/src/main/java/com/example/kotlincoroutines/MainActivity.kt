@@ -1,24 +1,25 @@
-package com.anushka.coroutinesdemo1
+package com.example.kotlincoroutines
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import kotlinx.android.synthetic.main.activity_main.*
+import androidx.databinding.DataBindingUtil
+import com.example.kotlincoroutines.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
+   private lateinit var binding: ActivityMainBinding
     private var count = 0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
 
-        btnCount.setOnClickListener {
-            tvCount.text = count++.toString()
+        binding.click.setOnClickListener {
+            binding.tvCount.text = count++.toString()
         }
-        btnDownloadUserData.setOnClickListener {
+        binding.btnDownloadUserData.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
                 //coroutine scope is an interface defines it's scope,global scope is used to handle top level coroutine
                 //dispatchers describe the kind of thread
@@ -30,9 +31,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun downloadUserData() {
+    private suspend fun downloadUserData() {
+
         for (i in 1..200000) {
-            Log.i("MyTag", "Downloading user $i in ${Thread.currentThread().name}")
+            withContext(Dispatchers.Main){
+                binding.tvUserMessage.text="Downloading user $i in ${Thread.currentThread().name}"
+            }
+
+            //Log.i("MyTag", "Downloading user $i in ${Thread.currentThread().name}")
         }
     }
-}
+    }

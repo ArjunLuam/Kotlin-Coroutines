@@ -1,4 +1,4 @@
-package com.anushka.coroutinesdemo1
+package com.example.kotlincoroutines
 
 import org.junit.Test
 
